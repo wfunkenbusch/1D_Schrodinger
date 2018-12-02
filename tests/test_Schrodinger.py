@@ -61,3 +61,52 @@ class data_unit_tests(unittest.TestCase):
     def test_H(self):
         d = data('potential_energy.dat', 5)
         tf.assert_equal(d.H, tf.zeros([5, 5], dtype = tf.float64))
+
+    # Tests if KE values are calculated and stored properly
+    def test_KE(self):
+        d = data('potential_energy.dat', 5)
+        d.kinetic_energy()
+        tf.assert_equal(d.H[0, 0], tf.constant(0, dtype = tf.float64))
+        # Integral of sin(x) from 0 to 3pi is 2
+        tf.assert_equal(d.H[1, 0], tf.constant(1.9999407080507803, dtype = tf.float64))
+        # Integral of cos(x) from 0 to 3pi is 0
+        tf.assert_equal(d.H[2, 0], tf.constant(0.00943252106630788, dtype = tf.float64))
+        # Integral of sin^2(x) from 0 to 3pi is 3pi/2 = 4.7
+        tf.assert_equal(d.H[1, 1], tf.constant(4.712388560987876, dtype = tf.float64))
+        # Integral of sin(x)cos(x) from 0 to 3pi is 0
+        tf.assert_equal(d.H[1, 2], tf.constant(4.448556822280619e-05, dtype = tf.float64))
+        # Integral of 4sin(2x)cos(x) from 0 to 3pi is 16/3
+        tf.assert_equal(d.H[3, 2], tf.constant(5.3328590283266255, dtype = tf.float64))
+    
+    # Tests if scaling coefficient works properly
+    def test_c(self):
+        d = data('potential_energy.dat', 5, 2)
+        d.kinetic_energy()
+        # Twice the value of the previous
+        tf.assert_equal(d.H[1, 0], tf.constant(2*1.9999407080507803, dtype = tf.float64))
+    
+    # Tests if domain input works properly
+    def test_domain(self):
+        d = data('potential_energy.dat', 5, 1, [0, 2*3.1415])
+        d.kinetic_energy()
+        # Integral of sin(x) from 0 to 2pi is 0
+        tf.assert_equal(d.H[1, 0], tf.constant(2.0919357132000873e-05, dtype = tf.float64))
+    
+    # Tests if PE values are calculated and stored properly
+    def test_PE(self):
+        d = data('potential_energy.dat', 3)
+        d.potential_energy()
+        # Average value is 3pi
+        tf.assert_equal(d.H[0, 0], tf.constant(9.424770000000002, dtype = tf.float64))
+        # Integral of cos(x) from 0 to 3pi is 0
+        tf.assert_equal(d.H[0, 2], tf.constant(0.00015966648064403503, dtype = tf.float64))
+        tf.assert_equal(d.H[1, 1], tf.constant(9.424770000357663, dtype = tf.float64))
+    
+    # Tests if KE and PE values are added properly
+    def test_add_H(self):
+        d = data('potential_energy.dat', 3)
+        d.kinetic_energy()
+        d.potential_energy()
+        tf.assert_equal(d.H[0, 0], tf.constant(9.424770000000002, dtype = tf.float64))
+        # Sum of previous tests' H[1, 1]
+        tf.assert_equal(d.H[1, 1], tf.constant(4.712388560987876 + 9.424770000357663, dtype = tf.float64))

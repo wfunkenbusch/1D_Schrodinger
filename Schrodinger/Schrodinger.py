@@ -103,3 +103,32 @@ class data:
         
         # Creates tensor which will store Hamiltonian matrix.
         self.H = tf.Variable(tf.zeros([self.basis_size, self.basis_size], dtype = tf.float64))
+
+    def kinetic_energy(self):
+        '''
+        Adds kinetic energy term to Hamiltonian matrix. The kinetic energy term in the Hamiltonian is
+        -hbar^2 d^2f/dx^2. For the Fourier basis, the second derivative of sin(ax) is -a^2 sin(ax), so the term is 
+        a^2 hbar^2 sin(ax) (or cos(ax)). In reduced units, hbar = 1. In the Hamiltonian matrix, the kinetic energy part
+        of H[i][j] is the inner product of the Hamiltonian applied to the ith basis element with the jth basis element.
+        '''
+        # Range of x across the input domain
+        xrange = self.domain[0] + range(1000) * (self.domain[1] - self.domain[0]) / 1000
+        for i in range(self.basis_size):
+            for j in range(self.basis_size):
+                self.H = tf.scatter_nd_add(self.H,
+                                           tf.constant([[i, j]]),
+                                           tf.constant([self.c*trapz(lambda x: ((i + 1) // 2)**2 * basis(i, x) * basis(j, x),
+                                                                     xrange)], dtype = tf.float64))
+                
+    def potential_energy(self):
+        '''
+        Adds potential energy term to Hamiltonian matrix. The potential energy term in the Hamiltonian is the input
+        data (self.V). In the Hamiltonian matrix, the potential energy part of H[i][j] is the inner product of the
+        potential energy times the ith basis element with the jth basis element.
+        '''
+        for i in range(self.basis_size):
+            for j in range(self.basis_size):
+                self.H = tf.scatter_nd_add(self.H,
+                                           tf.constant([[i, j]]),
+                                           tf.constant([trapz(lambda x: self.V[self.x.index(x)] * basis(i, x) * basis(j, x),
+                                                              self.x)], dtype = tf.float64))
