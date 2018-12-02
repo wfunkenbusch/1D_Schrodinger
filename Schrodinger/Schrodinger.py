@@ -51,3 +51,55 @@ def trapz(fun, xdata):
         integral += 1/2*ysum*dx
         
     return integral
+
+class data:
+    '''
+    Stores potential energy data and performs operations.
+    
+    Keys: 
+        self.x (list) - 
+            x data.
+            
+        self.V (list) -
+            Potential energy data.
+            
+        self.basis_size (integer) - 
+            Desired size of basis set. Basis functions come from the Fourier series.
+            
+        self.c (float) - 
+            Scaling constant for the kinetic energy term. Default 1.
+            
+        self.domain (list) - 
+            Contains the minimum and maximum value of the domain. Note that the potential energy term will only
+            be calculated for the range given in the imported file. Default [0, 9.42477]
+    '''
+    def __init__(self, FileName, basis_size, c = 1, domain = [0.0, 9.42477]):
+        '''
+        Stores x and potential energy data.
+        
+        Arguments:
+            FileName (string) - 
+                Path of the file.
+                
+            basis_size (integer) - 
+                Desired size of basis set. Basis functions come from the Fourier series.
+                
+            c (float) - 
+                Scaling constant for the kinetic energy term.
+                
+            domain (list) - 
+                Contains the minimum and maximum value of the domain. Note that the potential energy term will only
+                be calculated for the range given in the imported file.
+        '''
+        # Opens file and removes first line (header)
+        file_data = np.loadtxt(FileName)
+        self.x = list(file_data[:, 0])
+        self.V = list(file_data[:, 1])
+        
+        # Stores basis_size, scaling constant, and domain
+        self.basis_size = basis_size
+        self.c = c
+        self.domain = list(np.array(domain))
+        
+        # Creates tensor which will store Hamiltonian matrix.
+        self.H = tf.Variable(tf.zeros([self.basis_size, self.basis_size], dtype = tf.float64))

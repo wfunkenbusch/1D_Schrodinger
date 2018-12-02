@@ -38,3 +38,24 @@ class trapz_unit_tests(unittest.TestCase):
         
         xdata2 = [1, 2]
         self.assertEqual(3/2, trapz(fun, xdata2))
+
+class data_unit_tests(unittest.TestCase):
+    # Tests if x data is opened properly
+    def test_x(self):
+        d = data('potential_energy.dat', 5)
+        self.assertEqual(d.x, [0, 1.57079, 3.14159, 4.71238, 6.28318, 7.85398, 9.42477])
+    
+    # Tests if potential energy data is opened properly
+    def test_V(self):
+        d = data('potential_energy.dat', 5)
+        self.assertEqual(d.V, [0, 6, 0, -6, 0, 6, 0])
+    
+    # Tests if basis_size is stored properly
+    def test_basis_size(self):
+        d = data('potential_energy.dat', 5)
+        self.assertEqual(d.basis_size, 5)
+    
+    # Tests if H matrix is initialized properly
+    def test_H(self):
+        d = data('potential_energy.dat', 5)
+        tf.assert_equal(d.H, tf.zeros([5, 5], dtype = tf.float64))
