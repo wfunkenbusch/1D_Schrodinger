@@ -8,15 +8,21 @@ python:
   - 2.7
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -U tox-travis
+install:
+- pip install coveralls
+- python setup.py install
 
-# Command to run tests, e.g. python setup.py test
-script: tox
+before_install:
+- pip install coverage
+- sudo apt-get install -qq python-numpy
 
-# Assuming you have installed the travis-ci CLI tool, after you
-# create the Github repo and add it to Travis, run the
-# following command to finish PyPI deployment setup:
-# $ travis encrypt --add deploy.password
+script:
+- coverage run --source=Schdrodinger setup.py test
+- coverage report -m
+
+after_success: coveralls
+language: python
+
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel

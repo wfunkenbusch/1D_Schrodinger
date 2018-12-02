@@ -7,6 +7,8 @@ import math
 import numpy as np
 import argparse
 
+from Schrodinger.Schrodinger import *
+
 tf.enable_eager_execution()
 
 class basis_unit_tests(unittest.TestCase):
