@@ -1,38 +1,40 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""Tests for `Schrodinger` package."""
+import unittest
+import tensorflow as tf
+import math
+import numpy as np
+import argparse
 
-import pytest
+tf.enable_eager_execution()
 
-from click.testing import CliRunner
+class basis_unit_tests(unittest.TestCase):
+    # Tests if first basis vector (1) is returned
+    def test_first(self):
+        self.assertEqual(basis(0, 0), 1)
+        self.assertEqual(basis(0, 1), 1)
+        
+    # Tests if sin basis vectors are returned
+    def test_sin(self):
+        self.assertEqual(0, basis(1, 0))
+        self.assertEqual(basis(1, 1), math.sin(1))
+        self.assertEqual(basis(3, 1), math.sin(2))
+        
+    # Tests if cos basis vectors are returned
+    def test_cos(self):
+        self.assertEqual(1, basis(2, 0))
+        self.assertEqual(math.cos(1), basis(2, 1))
+        self.assertEqual(math.cos(2), basis(4, 1))
 
-from Schrodinger import Schrodinger
-from Schrodinger import cli
+class trapz_unit_tests(unittest.TestCase):
+    # Tests if trapz integrates simple function properly
+    def test_integrate(self):
+        def fun(x):
+            return x
 
-
-@pytest.fixture
-def response():
-    """Sample pytest fixture.
-
-    See more at: http://doc.pytest.org/en/latest/fixture.html
-    """
-    # import requests
-    # return requests.get('https://github.com/audreyr/cookiecutter-pypackage')
-
-
-def test_content(response):
-    """Sample pytest test function with the pytest fixture as an argument."""
-    # from bs4 import BeautifulSoup
-    # assert 'GitHub' in BeautifulSoup(response.content).title.string
-
-
-def test_command_line_interface():
-    """Test the CLI."""
-    runner = CliRunner()
-    result = runner.invoke(cli.main)
-    assert result.exit_code == 0
-    assert 'Schrodinger.cli.main' in result.output
-    help_result = runner.invoke(cli.main, ['--help'])
-    assert help_result.exit_code == 0
-    assert '--help  Show this message and exit.' in help_result.output
+        xdata = [0, 1]
+        self.assertEqual(1/2, trapz(fun, xdata))
+        
+        xdata2 = [1, 2]
+        self.assertEqual(3/2, trapz(fun, xdata2))
