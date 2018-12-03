@@ -67,11 +67,22 @@ class data:
             Desired size of basis set. Basis functions come from the Fourier series.
             
         self.c (float) - 
-            Scaling constant for the kinetic energy term. Default 1.
+            Scaling constant for the kinetic energy term. Must be positive. Default 1.
             
         self.domain (list) - 
             Contains the minimum and maximum value of the domain. Note that the potential energy term will only
-            be calculated for the range given in the imported file. Default [0, 9.42477]
+            be calculated for the range given in the imported file (it will be treated as 0 elsewhere).
+            Default [0, 9.42477]
+
+        self.H (tensor) - 
+            Hamiltonian matrix whose eigenvalues and eigenvectors solve the Schrodinger equation.
+            
+        self.min_e (tensor) - 
+            The minimum energy value. Must be positive
+            
+        self.min_v (tensor) - 
+            The eigenvector corresponding to the minimum energy value (self.min_e). The elements correspond to the
+            coefficients of a basis function.
     '''
     def __init__(self, FileName, basis_size, c = 1, domain = [0.0, 9.42477]):
         '''
@@ -107,8 +118,8 @@ class data:
     def kinetic_energy(self):
         '''
         Adds kinetic energy term to Hamiltonian matrix. The kinetic energy term in the Hamiltonian is
-        -hbar^2 d^2f/dx^2. For the Fourier basis, the second derivative of sin(ax) is -a^2 sin(ax), so the term is 
-        a^2 hbar^2 sin(ax) (or cos(ax)). In reduced units, hbar = 1. In the Hamiltonian matrix, the kinetic energy part
+        -c hbar^2 d^2f/dx^2. For the Fourier basis, the second derivative of sin(ax) is -a^2 sin(ax), so the term is 
+        a^2 c hbar^2 sin(ax) (or cos(ax)). In reduced units, hbar = 1. In the Hamiltonian matrix, the kinetic energy part
         of H[i][j] is the inner product of the Hamiltonian applied to the ith basis element with the jth basis element.
         '''
         # Range of x across the input domain
@@ -117,7 +128,7 @@ class data:
             for j in range(self.basis_size):
                 self.H = tf.scatter_nd_add(self.H,
                                            tf.constant([[i, j]]),
-                                           tf.constant([self.c*trapz(lambda x: ((i + 1) // 2)**2 * basis(i, x) * basis(j, x),
+                                           tf.constant([self.c * trapz(lambda x: ((i + 1) // 2)**2 * basis(i, x) * basis(j, x),
                                                                      xrange)], dtype = tf.float64))
                 
     def potential_energy(self):
