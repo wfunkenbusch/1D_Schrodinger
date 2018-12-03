@@ -132,3 +132,30 @@ class data:
                                            tf.constant([[i, j]]),
                                            tf.constant([trapz(lambda x: self.V[self.x.index(x)] * basis(i, x) * basis(j, x),
                                                               self.x)], dtype = tf.float64))
+                                                              
+    def compute_coefficients(self):
+        '''
+        Computes minimum energy level and the corresponding coefficients for the basis set. Minimum energy level must
+        be positive.
+        '''
+        # Computes eigenvalues and eigenvectors
+        e, v = tf.linalg.eigh(self.H)
+        
+        # Stores minimum energy level
+        self.min_e = e[0]
+        self.min_index = 0
+        
+        for i in range(1, e.shape[0]):
+            # Energy level must be positive
+            if tf.math.greater(0, self.min_e):
+                self.min_e = e[i]
+                self.min_index = i
+            # Replace old minimum energy level only if the new one is positive and less than the old
+            if tf.math.greater(e[i], 0) and tf.math.greater(self.min_e, e[i]):
+                self.min_e = e[i]
+                self.min_index = i
+                
+        self.min_v = v[self.min_index]
+        
+        print('Minimum energy level: {}' .format(self.min_e))
+        print('Coefficients for Fourier basis: {}' .format(self.min_v))

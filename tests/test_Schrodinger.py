@@ -110,3 +110,24 @@ class data_unit_tests(unittest.TestCase):
         tf.assert_equal(d.H[0, 0], tf.constant(9.424770000000002, dtype = tf.float64))
         # Sum of previous tests' H[1, 1]
         tf.assert_equal(d.H[1, 1], tf.constant(4.712388560987876 + 9.424770000357663, dtype = tf.float64))
+
+    # Tests if minimum energy is found
+    def test_energy(self):
+        d = data('potential_energy.dat', 3)
+        d.kinetic_energy()
+        d.potential_energy()
+        d.compute_coefficients()
+        tf.assert_equal(d.min_e, tf.constant(4.702957640910531, dtype = tf.float64))
+        
+    # Tests if correct eigenvector (coefficients) is (are) pulled
+    def test_coefficients(self):
+        d = data('potential_energy.dat', 3)
+        d.kinetic_energy()
+        d.potential_energy()
+        d.compute_coefficients()
+        tf.assert_equal(d.min_v[0], tf.constant(0.6791193459007923, dtype = tf.float64))
+        tf.assert_equal(d.min_v[1], tf.constant(0.00033284060889309826, dtype = tf.float64))
+        tf.assert_equal(d.min_v[2], tf.constant(0.7340277945966407, dtype = tf.float64))
+
+if __name__ == '__main__':
+    unittest.main()
