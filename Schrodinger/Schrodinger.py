@@ -132,7 +132,7 @@ class data:
                                            tf.constant([[i, j]]),
                                            tf.constant([trapz(lambda x: self.V[self.x.index(x)] * basis(i, x) * basis(j, x),
                                                               self.x)], dtype = tf.float64))
-                                                              
+
     def compute_coefficients(self):
         '''
         Computes minimum energy level and the corresponding coefficients for the basis set. Minimum energy level must
@@ -159,3 +159,30 @@ class data:
         
         print('Minimum energy level: {}' .format(self.min_e))
         print('Coefficients for Fourier basis: {}' .format(self.min_v))
+
+def get_parser():
+    '''
+    Allows for user input from the command line.
+    '''
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--FileName', type = str, default = 'd', help = 'String: Base file name')
+    parser.add_argument('--basis_size', type = int, default = 5, help = 'Integer: Number of basis functions')
+    parser.add_argument('--c', type = float, default = 1, help = 'Float: Scaling constant for the kinetic energy term')
+    parser.add_argument('--domain', type = list, default = [0, 9.42477], help = 'Bounds for kinetic energy domain')
+    
+    args, unknown = parser.parse_known_args()
+
+    return args
+        
+def main():
+    '''
+    Main function. Computes and reports minimum energy value and the corresponding basis function coefficients.
+    '''
+    args = get_parser()
+    d = data(args.FileName, args.basis_size, args.c, args.domain)
+    d.kinetic_energy()
+    d.potential_energy()
+    d.compute_coefficients()    
+        
+if __name__ == '__main__':
+    main()
