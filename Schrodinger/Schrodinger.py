@@ -168,17 +168,17 @@ class data:
                 
         self.min_v = v[self.min_index]
         
-        print('Minimum energy level: {}' .format(self.min_e))
-        print('Coefficients for Fourier basis: {}' .format(self.min_v))
+        print('Minimum Energy Level: {}' .format(self.min_e))
+        print('Coefficients for Fourier Basis: {}' .format(self.min_v))
 
 def get_parser():
     '''
     Allows for user input from the command line.
     '''
     parser = argparse.ArgumentParser()
-    parser.add_argument('--FileName', type = str, default = 'd', help = 'String: Base file name')
+    parser.add_argument('--FileName', type = str, default = 'potential_energy.dat', help = 'String: Base file name')
     parser.add_argument('--basis_size', type = int, default = 5, help = 'Integer: Number of basis functions')
-    parser.add_argument('--c', type = float, default = 1, help = 'Float: Scaling constant for the kinetic energy term')
+    parser.add_argument('--c', type = float, default = 1.0, help = 'Float: Scaling constant for the kinetic energy term')
     parser.add_argument('--domain', type = list, default = [0, 9.42477], help = 'Bounds for kinetic energy domain')
     
     args, unknown = parser.parse_known_args()
