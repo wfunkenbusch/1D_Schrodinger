@@ -118,9 +118,9 @@ class data:
     def kinetic_energy(self):
         '''
         Adds kinetic energy term to Hamiltonian matrix. The kinetic energy term in the Hamiltonian is
-        -c hbar^2 d^2f/dx^2. For the Fourier basis, the second derivative of sin(ax) is -a^2 sin(ax), so the term is 
-        a^2 c hbar^2 sin(ax) (or cos(ax)). In reduced units, hbar = 1. In the Hamiltonian matrix, the kinetic energy part
-        of H[i][j] is the inner product of the Hamiltonian applied to the ith basis element with the jth basis element.
+        -c d^2f/dx^2. For the Fourier basis, the second derivative of sin(ax) is -a^2 sin(ax), so the term is 
+        a^2 c sin(ax) (or cos(ax)). In the Hamiltonian matrix, the kinetic energy part of H[i][j] is the inner
+        product of the Hamiltonian applied to the ith basis element with the jth basis element.
         '''
         # Range of x across the input domain
         xrange = self.domain[0] + range(1000) * (self.domain[1] - self.domain[0]) / 1000
@@ -171,7 +171,7 @@ class data:
         print('Minimum Energy Level: {}' .format(self.min_e))
         print('Coefficients for Fourier Basis: {}' .format(self.min_v))
 
-def get_parser():
+def get_parser(): # pragma no cover
     '''
     Allows for user input from the command line.
     '''
@@ -185,7 +185,7 @@ def get_parser():
 
     return args
         
-def main():
+def main(): # pragma no cover
     '''
     Main function. Computes and reports minimum energy value and the corresponding basis function coefficients.
     '''
@@ -195,5 +195,5 @@ def main():
     d.potential_energy()
     d.compute_coefficients()    
         
-if __name__ == '__main__':
+if __name__ == '__main__': # pragma no cover
     main()

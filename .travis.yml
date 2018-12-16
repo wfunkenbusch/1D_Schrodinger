@@ -5,7 +5,6 @@ python:
   - 3.6
   - 3.5
   - 3.4
-  - 2.7
 
 # Command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
@@ -15,6 +14,7 @@ install:
 before_install:
 - pip install coverage
 - sudo apt-get install -qq python-numpy
+- pip install tensorflow
 
 script:
 - coverage run --source=Schrodinger setup.py test

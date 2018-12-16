@@ -36,7 +36,7 @@ setup(
     description="Solves 1D Schrodinger equation for arbitrary potential field.",
     entry_points={
         'console_scripts': [
-            'Schrodinger=Schrodinger.cli:main',
+            'Schrodinger=Schrodinger.Schrodinger:main',
         ],
     },
     install_requires=requirements,

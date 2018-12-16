@@ -3,9 +3,13 @@
 Approximates the minimum energy and corresponding wavefunction of a quantum particle for an arbitrary potential field by numerically solving the one-dimensional time-independent Schrodinger equation using a Fourier series basis.
 
 Implementation:
-1. Needed outside modules: tensorflow, math, numpy, argparse, unittest (if unit testing)
+1. Needed outside modules: tensorflow (with enable_eager_execution()), math, numpy, argparse, unittest (if unit testing)
 2. Clone this repository using the following command: git clone https://github.com/wfunkenbusch/1D_Schrodinger.git 
-3. Run the code using the following command:
+3. Run the code using the following command: Schrodinger *keyword arguments*
+
+Example:
+
+Schrondinger --Filename 'pe.dat' --basis_size 100 --c 1.0 --domain [0, 1]
 
 Arguments:
 
