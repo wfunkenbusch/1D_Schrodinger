@@ -1,5 +1,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/wfunkenbusch/1D_Schrodinger/badge.svg?branch=master)](https://coveralls.io/github/wfunkenbusch/1D_Schrodinger?branch=master)
 
+Under development.
+
 Approximates the minimum energy and corresponding wavefunction of a quantum particle for an arbitrary potential field by numerically solving the one-dimensional time-independent Schrodinger equation using a Fourier series basis.
 
 Implementation:
